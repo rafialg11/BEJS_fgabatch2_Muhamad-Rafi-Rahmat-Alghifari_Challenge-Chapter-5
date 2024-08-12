@@ -188,4 +188,39 @@ describe("API Integration Testing", () => {
             expect(res.body.status).toEqual("SUCCESS");        
         });
     })
+
+    describe("Transaction Endpoint", () => {
+        it("should create new transaction", async () => {                                    
+            const res = await request(app)
+            .post("/api/v1/transactions/create")            
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                "amount": 30000,
+                "sender_account_id": "clz15iu6i0006bng6hegtcjjc",
+                "receiver_account_id": "clz15iu6i0006bng6hegtcjjc",
+                "description": "Uang Jajan",
+                "transfer_purpose": "Pemindahan Dana"
+            });                  
+          expect(res.statusCode).toEqual(201);
+          expect(res.body.status).toEqual("SUCCESS");              
+        })
+
+        it("should get all transactions", async () => {
+            const res = await request(app)
+                .get("/api/v1/transactions/getAll")
+                .set("Authorization", `Bearer ${token}`);
+            expect(res.statusCode).toEqual(200);
+            expect(res.body.status).toEqual("SUCCESS");                       
+        })
+
+        it("should get one transaction", async () => {  
+            const transactionId = await prisma.transaction.findMany({select: {id: true}});
+            const res = await request(app)
+                .get("/api/v1/transactions/getOne/" + transactionId[0].id)
+                .set("Authorization", `Bearer ${token}`);
+            expect(res.statusCode).toEqual(200);
+            expect(res.body.status).toEqual("SUCCESS");                       
+        })
+    })
+
 });
