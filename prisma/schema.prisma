@@ -56,7 +56,7 @@ model BankAccount {
   pin String
   balance Int @default(0)
   user_id String
-  user User @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   sentTransaction  Transaction[] @relation("SentTransactions")
   receivedTransaction  Transaction[] @relation("ReceivedTransactions")
 }
@@ -69,6 +69,6 @@ model Transaction {
   receiver_account_id String
   description String?
   transfer_purpose String?   
-  sender_account BankAccount @relation("SentTransactions", fields: [sender_account_id], references: [id])
-  receiver_account BankAccount @relation("ReceivedTransactions", fields: [receiver_account_id], references: [id])   
+  sender_account BankAccount @relation("SentTransactions", fields: [sender_account_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  receiver_account BankAccount @relation("ReceivedTransactions", fields: [receiver_account_id], references: [id], onDelete: Cascade, onUpdate: Cascade)   
 }

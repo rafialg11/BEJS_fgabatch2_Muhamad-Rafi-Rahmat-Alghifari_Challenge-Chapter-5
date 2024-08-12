@@ -1,0 +1,145 @@
+openapi: 3.0.3
+components:
+  schemas:
+    CreateAccountRequest:
+      type: object
+      properties:
+        bank_name:
+          type: string
+        account_number:
+          type: string
+        account_type:
+          type: string
+        pin:
+          type: string
+        balance:
+          type: number
+
+    CreateAccountResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "SUCCESS"
+        message:
+          type: string
+          example: "Account created successfully"
+        data:
+          properties:
+            id:
+              type: string
+              example: "1"
+            bank_name:
+              type: string
+              example: "BCA"
+            account_number:
+              type: string
+              example: "123456789"
+            account_type:
+              type: string
+              example: "Savings"
+            balance:
+              type: number
+              example: 100000
+
+paths:
+  /api/v1/accounts/getAll:
+    get:
+      tags: [Account]
+      summary: Get all accounts
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /api/v1/accounts/getOne/{id}:
+    get:
+      tags: [Account]
+      summary: Get one account
+      parameters:
+        - name: id
+          in: path
+          description: ID of the account
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /api/v1/accounts/create:
+    post:
+      tags: [Account]
+      summary: Create new account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAccountResponse'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /api/v1/accounts/changePin/{id}:
+    patch:
+      tags: [Account]
+      summary: Change pin
+      parameters:
+        - name: id
+          in: path
+          description: ID of the account
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pin:
+                  type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /api/v1/accounts/delete/{id}:
+    delete:
+      tags: [Account]
+      summary: Delete account
+      parameters:
+        - name: id
+          in: path
+          description: ID of the account
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
