@@ -1,0 +1,57 @@
+openapi: 3.0.3
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+      example:
+        email: "johnkey@example.com"
+        password: "password123"
+
+    LoginResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "SUCCESS"
+        message:
+          type: string
+          example: "User logged in successfully"
+        data:            
+          properties:
+            token:
+              type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsem1za3Y4cjAwMDBjYnA0aWo5YzFlajEiLCJpYXQiOjE3MjMyMTMyMTksImV4cCI6MTcyMzIxNjgxOX0.3YJVo3j-5btO0tLz6hbSLZNwYUhE6HO9MtAmb16mxus"
+            email:
+              type: string
+              example: "gulugulu@example.com"
+
+paths:
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error

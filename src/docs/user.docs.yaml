@@ -1,0 +1,261 @@
+openapi: 3.0.3
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The auto-generated id of the user
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+      required:
+        - username
+        - email
+        - password
+        - phone
+      example:
+        username: "JohnKey88"
+        email: "johnkey@example.com"
+        password: "password123"  # Note: passwords should not be stored in plain text.
+        phone: "873847872834"
+
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        birth_place:
+          type: string
+        gender:
+          type: string
+        identity_number:
+          type: string
+        identity_type:
+          type: string
+        user_id:
+          type: string      
+      example:
+        birth_date: "1988-02-10T12:00:00.000Z"
+        birth_place: "Jakarta"
+        gender: "L"
+        identity_number: "1234567890"
+        identity_type: "KTP"
+
+    Address:
+      type: object
+      properties:
+        id:
+          type: string
+        street:
+          type: string
+        post_code:
+          type: string
+        village:
+          type: string
+        district:
+          type: string
+        city:
+          type: string
+        province:
+          type: string
+        user_id:
+          type: string      
+      example:
+        street: "Jl. Kebon Jeruk"
+        post_code: "10210"
+        village: "Kebon Jeruk"
+        district: "Kebon Jeruk"
+        city: "Jakarta"
+        province: "Jakarta"
+
+paths:
+  /api/v1/users/register:
+    post:
+      tags: [User]
+      summary: Add user
+      description: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "John Key"
+                email:
+                  type: string
+                  example: "0Z6p6@example.com"
+                password:
+                  type: string
+                  example: "password123"
+                phone:
+                  type: string
+                  example: "873847872834"
+                birth_date:
+                  type: string
+                  format: date-time
+                  example: "1988-02-10T12:00:00.000Z"
+                birth_place:
+                  type: string
+                  example: "Jakarta"
+                gender:
+                  type: string
+                  example: "L"
+                identity_number:
+                  type: string
+                  example: "92184791742369"
+                identity_type:
+                  type: string
+                  example: "ktp"
+                street:
+                  type: string
+                  example: "Jl. Kebon Jeruk"
+                post_code:
+                  type: string
+                  example: "10210"
+                village:
+                  type: string
+                  example: "Kebon Jeruk"
+                district:
+                  type: string
+                  example: "Kebon Jeruk"
+                city:
+                  type: string
+                  example: "Jakarta"
+                province:
+                  type: string
+                  example: "Jakarta"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "SUCCESS"
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        name:
+                          type: string
+                          example: "John Key"
+                        email:
+                          type: string
+                          example: "0Z6p6@example.com"
+                        phone:
+                          type: string
+                          example: "873847872834"                        
+                      profile:
+                        $ref: '#/components/schemas/Profile'
+                      address:
+                        $ref: '#/components/schemas/Address'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /api/v1/users/getAll:
+    get:
+      tags: [User]
+      summary: Get all users
+      description: Get all users
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "SUCCESS"
+                  userData:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "clzmracg70000dbhtdv53eacc"
+                        name:
+                          type: string
+                          example: "Ngolo Kante"
+                        email:
+                          type: string
+                          example: "gulugulu@example.com"
+                        phone:
+                          type: string
+                          example: "09827384534"
+                        profile:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: "clzmracgb0002dbhtusg0hvt4"
+                            birth_date:
+                              type: string
+                              format: date-time
+                              example: "1988-02-10T12:00:00.000Z"
+                            birth_place:
+                              type: string
+                              example: "Paris"
+                            gender:
+                              type: string
+                              example: "L"
+                            identity_number:
+                              type: string
+                              example: "9112939847491246"
+                            identity_type:
+                              type: string
+                              example: "KTP"
+                            user_id:
+                              type: string
+                              example: "clzmracg70000dbhtdv53eacc"
+                        address:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: "clzmracgf0004dbht8miooflw"
+                            street:
+                              type: string
+                              example: "Jl. Pahlawan No. 17"
+                            post_code:
+                              type: string
+                              example: "60256"
+                            village:
+                              type: string
+                              example: "Cibadak"
+                            district:
+                              type: string
+                              example: "Cisolok"
+                            city:
+                              type: string
+                              example: "Ciamis"
+                            province:
+                              type: string
+                              example: "Jawa Barat"
+                            user_id:
+                              type: string
+                              example: "clzmracg70000dbhtdv53eacc"                
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
