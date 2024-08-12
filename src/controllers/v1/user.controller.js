@@ -48,7 +48,7 @@ async function createUser(req, res) {
                 profile: newProfile,
                 address: newAddress
             }
-            res.status(201).json({status: "SUCCESS", data}); 
+            res.status(201).json({status: "SUCCESS", message: "User created successfully", data}); 
         }
     }catch (error) {
         console.log(error);
@@ -76,8 +76,93 @@ async function getAllUsers(req, res) {
     }
 }
 
+async function getOneUser(req, res) {
+    try{
+        const id = req.params.id;
+        const userData = await user.getOneUser(id); 
+        if(!userData) return res.status(400).json({status : "ERROR", message: "User not found"});         
+        const data = {
+            id: userData.id,
+            name: userData.name,
+            email: userData.email,                
+            phone: userData.phone,
+            profile: userData.Profile,
+            address: userData.Address
+        }
+        return res.status(200).json({status: "SUCCESS", data});
+    }catch(error) {
+        console.log(error);
+        res.status(500).json({status : "ERROR", message: "Something went wrong"});
+    }
+}
+
+async function updateUser(req, res) {
+    try{
+        const user_id = req.params.id;
+        
+        const { 
+            name, 
+            email, 
+            password, 
+            phone, 
+            birth_date, 
+            birth_place, 
+            gender, 
+            identity_number, 
+            identity_type ,
+            street,
+            post_code,
+            village,
+            district,
+            city,
+            province
+        } = req.body;            
+
+        const checkUserData = await user.getOneUser(user_id);
+        if(!checkUserData) return res.status(404).json({status : "ERROR", message: "User not found"});
+
+        const userData = await user.updateUser(user_id, name, email, password, phone);
+        const profileData = await profile.updateProfile(user_id, birth_date, birth_place, gender, identity_number, identity_type);
+        const addressData = await address.updateAddress(user_id, street, post_code, village, district, city, province);
+        
+        const data = {
+            userData:{
+                id: userData.id,
+                name: userData.name,
+                email: userData.email,                
+                phone: userData.phone,
+            },
+            profileData,
+            addressData
+        }
+        return res.status(200).json({status: "SUCCESS", message: "User updated successfully", data});
+    }catch(error) {
+        console.log(error);
+        res.status(500).json({status : "ERROR", message: "Something went wrong"});
+    }
+    
+}
+
+async function deleteUser(req, res) {
+    try{
+        const user_id = req.params.id;
+
+        const userData = await user.getOneUser(user_id);
+        if(!userData) return res.status(404).json({status : "ERROR", message: "User not found"});
+
+        await user.deleteUser(user_id);       
+        return res.status(200).json({status: "SUCCESS", message: "User deleted successfully"});
+    }catch(error) {
+        console.log(error);
+        res.status(500).json({status : "ERROR", message: "Something went wrong"});
+    }
+}
+
 
 module.exports = {
     createUser,
-    getAllUsers
+    getAllUsers,
+    getOneUser,
+    updateUser,
+    deleteUser
 }
